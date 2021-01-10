@@ -14,19 +14,6 @@ const ps4_ip = "192.168.1.125";
 const local_ip = "192.168.1.166";
 
 const app = express();
-find().then(devices => {
-  console.log(devices)
-  devices.forEach( device => {
-    console.log(`scanning ip ${device.ip}`)
-    nodePortScanner(device.ip, [12800])
-    .then(results => {  
-      console.log(results);
-    })
-    .catch(error => {
-      console.log(error);
-    });
-  })
-})
 
 app.use(morgan('combined'));
 app.use(express.urlencoded());
@@ -36,7 +23,14 @@ app.set('view engine', 'html');
 app.set('views', __dirname + '/views');
 
 app.get('/', function (req, res) {
-  res.render('index', {"pkgs": get_pkgs()});
+  get_devices().then(devices => {
+    res.render('index', 
+      {
+        "pkgs": get_pkgs(),
+        "devices": devices
+      }
+    );
+  })
 });
 app.post('/install', function(req, res) {
   const filepath = req.body.filepath;
@@ -60,6 +54,40 @@ function get_dirs_with_pkgs() {
   return Object.keys(dirs);
 }
 
+function get_devices() {
+  return find()
+  find().then(device => {
+    console.log(device)
+    return device
+  })
+  /*
+  return [
+    {
+      host: "hey",
+      port_open: false
+    },
+    {host: "world"},
+    {host: "there"},
+    {host: "he"}
+  ]
+  */
+
+  let d = Array()
+  find().then(devices => {
+    devices.forEach(device => {
+      nodePortScanner(device.ip, [12800])
+      .then(results => {  
+        d.push(results)
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    })
+  })
+  .finally(() => {
+    return d
+  })
+}
 function get_pkgs() {
   const walkSync = function(dir, filelist) {
     const files = fs.readdirSync(dir);
