@@ -5,13 +5,28 @@ const path = require('path');
 const fs = require('fs');
 const filesize = require('filesize');
 const { exec } = require('child_process');
+const find = require('local-devices');
+const nodePortScanner = require('node-port-scanner');
 
 const port = 6969;
-const static_files_path = "/tmp";
-const ps4_ip = "192.168.1.1";
-const local_ip = "127.0.0.1";
+const static_files_path = "/Users/garrepi/Desktop/ps4";
+const ps4_ip = "192.168.1.125";
+const local_ip = "192.168.1.166";
 
 const app = express();
+find().then(devices => {
+  console.log(devices)
+  devices.forEach( device => {
+    console.log(`scanning ip ${device.ip}`)
+    nodePortScanner(device.ip, [12800])
+    .then(results => {  
+      console.log(results);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+  })
+})
 
 app.use(morgan('combined'));
 app.use(express.urlencoded());
