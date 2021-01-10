@@ -1,11 +1,31 @@
 <html>
+<head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
 <body>
-  <h1>Devices</h1>
   <div>
-    {{#devices}}
-      <p>{{name}}</p>
-      <small>12800: {{port_open}}</small>
-    {{/devices}}
+    <label>PS4 IP</label>
+    <input type="text">
+  </div>
+
+  <h2>Local devices</h2>
+  <table class="table table-dark table-sm">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">IP</th>
+        <th scope="col">Port 12800</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#devices}} 
+      <tr>
+        <td>{{name}}</td>
+        <td>{{ip}}</td>
+        <td>{{port_open}}</td>
+      </tr>
+      {{/devices}}
+    </tbody>
   </div>
 
 <div>

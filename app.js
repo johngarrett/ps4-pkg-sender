@@ -24,7 +24,7 @@ app.set('views', __dirname + '/views');
 
 app.get('/', function (req, res) {
   get_devices().then(devices => {
-    res.render('index', 
+    res.render('splash', 
       {
         "pkgs": get_pkgs(),
         "devices": devices
@@ -56,24 +56,6 @@ function get_dirs_with_pkgs() {
 
 function get_devices() {
   return find()
-  find().then(device => {
-    console.log(device)
-    return device
-  })
-  /*
-  return [
-    {
-      host: "hey",
-      port_open: false
-    },
-    {host: "world"},
-    {host: "there"},
-    {host: "he"}
-  ]
-  */
-
-  let d = Array()
-  find().then(devices => {
     devices.forEach(device => {
       nodePortScanner(device.ip, [12800])
       .then(results => {  
@@ -83,10 +65,6 @@ function get_devices() {
         console.log(error);
       });
     })
-  })
-  .finally(() => {
-    return d
-  })
 }
 function get_pkgs() {
   const walkSync = function(dir, filelist) {
